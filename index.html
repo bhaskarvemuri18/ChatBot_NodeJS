@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=2">
+    <title>PDS Virtual Assistant</title>
+      <!-- <link rel="stylesheet" href="style.css" />  -->
+      <link href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/journal/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+      <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+  </head>
+  <body>
+     <div id="content" style="width: 590px; height: 580px;  border: solid 5px; margin: 0 0 20px 0; border: solid 1px #f9f9f9; overflow-y: auto; background:#F8C471";> 
+    </div>
+    <div class="controls">
+      <input id="field" type="text" style="width:500px; height: 30px;"/>
+      <input id="send" type="button" name="send" value="send" style="width: 75px;height:30px; background:#0099FF"/>
+    </div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>    
+$(document).ready(function() {
+  var messages = [];
+  var socket = io.connect('http://'+location.host);
+  var field = document.getElementById("field");
+  var sendButton = document.getElementById("send");
+  var content = document.getElementById("content");
+  var name = "User";
+  // +Math.floor((Math.random() * 1000) + 1);;
+
+  socket.on('message', function (data) {
+    if(data.message) {
+      messages.push(data);
+      var html = '';
+      for(var i=0; i<messages.length; i++) {
+        html += '<b>' + (messages[i].username ? messages[i].username : 'Virtual Assistant') + ': </b>';
+        html += messages[i].message + '<br />';
+      }
+      content.innerHTML = html;
+    } else {
+      console.log("There is a problem:", data);
+    }
+  });
+  sendButton.onclick = sendMessage = function() {
+      var text = field.value;
+      socket.emit('send', { message: text, username: name });
+      field.value = "";
+  };
+  $("#field").keyup(function(e) {
+    if(e.keyCode == 13) {
+      sendMessage();
+    }
+  });
+});
+
+</script>
+  </body>
+</html>

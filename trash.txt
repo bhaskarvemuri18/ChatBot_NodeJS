@@ -1,0 +1,14 @@
+var sequence = {"Loading into the table" : [{
+  "command":"/gid/pdm/scripts/run_workflow.sh Daily_FS_PricesIND",
+  "type":"",
+  "successMsg":"Load completed. Starting Cache_Refresh_IWServices_Daily_Data",
+  "failureMsg":"Load failed. Check the monitor for status"
+},{
+ "command":"/gid/pdm/scripts/run_workflow.sh Daily_PDM_Composite_Cache_Refresh_IWServices_Daily_Data",
+  "successMsg":"Services refreshed. Starting Notification",
+  "failureMsg":"Refresh failed. Check the monitor for status"
+},{
+ "command":"/gid/pdm/scripts/run_workflow.sh Daily_PDM_Composite_Cache_Refresh_Notification_IW_OTHERS",
+  "successMsg":"Services refreshed and Notification was sent",
+  "failureMsg":"Refresh failed. Check the monitor for status"
+}], "IW": []};
